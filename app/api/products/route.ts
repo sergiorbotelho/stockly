@@ -1,5 +1,7 @@
 import { db } from "@/app/_lib/prisma";
 
+//Pasra fins didáticos
+
 export async function GET() {
   const products = await db.product.findMany({});
 
