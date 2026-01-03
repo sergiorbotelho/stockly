@@ -41,6 +41,13 @@ export const productTableColumns: ColumnDef<Product>[] = [
   {
     accessorKey: "price",
     header: "Valor unitário",
+    cell({ row: { original } }) {
+      const product = original;
+      return Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }).format(Number(product.price));
+    },
   },
   {
     accessorKey: "stock",
@@ -49,8 +56,8 @@ export const productTableColumns: ColumnDef<Product>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: (row) => {
-      const product = row.row.original;
+    cell: ({ row: { original } }) => {
+      const product = original;
       const label = getStatusLabel(product.status);
 
       return (
@@ -70,10 +77,10 @@ export const productTableColumns: ColumnDef<Product>[] = [
   {
     accessorKey: "actions",
     header: "Ações",
-    cell: ({ row }) => {
+    cell: ({ row: { original } }) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const [editDialogOpen, setEditDialogOpen] = useState(false);
-      const product = row.original;
+      const product = original;
       return (
         <AlertDialog>
           <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
