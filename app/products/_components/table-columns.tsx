@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/app/_components/ui/badge";
+import { formatCurrency } from "@/app/_helpers/currency";
 import { Product } from "@/app/generated/prisma";
 import { ColumnDef } from "@tanstack/react-table";
 import { CircleIcon } from "lucide-react";
@@ -23,10 +24,7 @@ export const productTableColumns: ColumnDef<Product>[] = [
     header: "Valor unitário",
     cell({ row: { original } }) {
       const product = original;
-      return Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      }).format(Number(product.price));
+      return formatCurrency(Number(product.price));
     },
   },
   {
