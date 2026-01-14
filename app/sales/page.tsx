@@ -1,7 +1,5 @@
-import { Button } from "../_components/ui/button";
-import { Sheet, SheetTrigger } from "../_components/ui/sheet";
 import { getProducts } from "../_data-acess/product/get-products";
-import UpsertSheetContent from "./_components/upsert-sheet-content";
+import CreateSaleButton from "./_components/create-sale-button";
 
 const SalesPage = async () => {
   const products = await getProducts();
@@ -16,17 +14,12 @@ const SalesPage = async () => {
           <span className="text-xs font-semibold text-slate-500">
             Gestão de Vendas
           </span>
-          <h2 className="text-xl font-semibold">Produtos</h2>
+          <h2 className="text-xl font-semibold">Vendas</h2>
         </div>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button>Nova venda</Button>
-          </SheetTrigger>
-          <UpsertSheetContent
-            productsOptions={JSON.parse(JSON.stringify(options))}
-            products={JSON.parse(JSON.stringify(products))}
-          />
-        </Sheet>
+        <CreateSaleButton
+          productsOptions={JSON.parse(JSON.stringify(options))}
+          products={JSON.parse(JSON.stringify(products))}
+        />
       </div>
       {/* <DataTable
         columns={productTableColumns}
