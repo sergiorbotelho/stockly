@@ -7,7 +7,6 @@ export const upsertProductSchema = z.object({
   stock: z
     .number()
     .int()
-    .positive({ error: "A quantidade em estoque deve ser positiva." })
     .min(0, { error: "A quantidade em estoque é obrigatório" }),
 });
 
