@@ -24,17 +24,30 @@ import {
 import { Input } from "@/app/_components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+import { toast } from "sonner";
 
 interface UpsertProductDialogContentProps {
-  onSucess?: VoidFunction;
+  setDialogIsOpen: Dispatch<SetStateAction<boolean>>;
   defaultValues?: UpsertProductSchema;
 }
 const UpsertProductDialogContent = ({
-  onSucess,
+  setDialogIsOpen,
   defaultValues,
 }: UpsertProductDialogContentProps) => {
+  const { execute: executeUpsertProduct } = useAction(upsertProduct, {
+    onError: () => {
+      toast.error("Ocorreu umerro ao salvar o produto.");
+    },
+    onSuccess: () => {
+      toast.success("Produto salvo com sucesso.");
+
+      setDialogIsOpen?.(false);
+    },
+  });
   const form = useForm<UpsertProductSchema>({
     shouldUnregister: true,
     resolver: zodResolver(upsertProductSchema),
@@ -46,18 +59,14 @@ const UpsertProductDialogContent = ({
   });
 
   const isEditing = !!defaultValues;
-  async function onSubmit(data: UpsertProductSchema) {
-    try {
-      await upsertProduct({ ...data, id: defaultValues?.id });
-      onSucess?.();
-    } catch (error) {
-      console.error(error);
-    }
-  }
+
   return (
     <DialogContent>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+        <form
+          onSubmit={form.handleSubmit(executeUpsertProduct)}
+          className="space-y-2"
+        >
           <DialogHeader>
             <DialogTitle>{isEditing ? "Editar" : "Criar"} produto</DialogTitle>
             <DialogDescription>Insira as informações abaixo</DialogDescription>
