@@ -1,3 +1,19 @@
+import {
+  Header,
+  HeaderLeft,
+  HeaderSubTitle,
+  HeaderTitle,
+} from "./_components/header";
+
 export default function Home() {
-  return <div>PAGINA HOME</div>;
+  return (
+    <div className="m-8 w-full space-y-8 rounded-lg bg-white p-8">
+      <Header>
+        <HeaderLeft>
+          <HeaderSubTitle>Visão geral dos dados</HeaderSubTitle>
+          <HeaderTitle>Dashboard</HeaderTitle>
+        </HeaderLeft>
+      </Header>
+    </div>
+  );
 }
