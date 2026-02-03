@@ -8,14 +8,14 @@ import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import UpsertSheetContent from "./upsert-sheet-content";
 
-interface CreateSaleButtonProps {
+interface UpsertSaleButtonProps {
   products: Product[];
   productsOptions: ComboboxOption[];
 }
-const CreateSaleButton = ({
+const UpsertSaleButton = ({
   products,
   productsOptions,
-}: CreateSaleButtonProps) => {
+}: UpsertSaleButtonProps) => {
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
   return (
     <Sheet open={sheetIsOpen} onOpenChange={setSheetIsOpen}>
@@ -34,4 +34,4 @@ const CreateSaleButton = ({
   );
 };
 
-export default CreateSaleButton;
+export default UpsertSaleButton;

@@ -1,5 +1,5 @@
 "use client";
-import { createSale } from "@/app/_actions/sales/create-sale";
+import { upsertSale } from "@/app/_actions/sales/upsert-sale";
 import { Button } from "@/app/_components/ui/button";
 import { Combobox, ComboboxOption } from "@/app/_components/ui/combobox";
 import {
@@ -28,8 +28,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/_components/ui/table";
+import { ProductDto } from "@/app/_data-acess/product/get-products";
 import { formatCurrency } from "@/app/_helpers/currency";
-import { Product } from "@/app/generated/prisma";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { flattenValidationErrors } from "next-safe-action";
@@ -47,9 +47,11 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 interface UpsertSheetContentProps {
-  products: Product[];
+  saleId?: string;
+  products: ProductDto[];
   productsOptions: ComboboxOption[];
   setSheetIsOpen: Dispatch<SetStateAction<boolean>>;
+  defaultSelectedProducts?: SelectedProduct[];
 }
 
 interface SelectedProduct {
@@ -59,15 +61,17 @@ interface SelectedProduct {
   quantity: number;
 }
 const UpsertSheetContent = ({
+  saleId,
   productsOptions,
   products,
   setSheetIsOpen,
+  defaultSelectedProducts,
 }: UpsertSheetContentProps) => {
   const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>(
-    [],
+    defaultSelectedProducts ?? [],
   );
 
-  const { execute: executeCreateSale } = useAction(createSale, {
+  const { execute: executeUpsertSale } = useAction(upsertSale, {
     onError: ({ error: { validationErrors, serverError } }) => {
       const flattenedErrors = flattenValidationErrors(validationErrors);
 
@@ -147,7 +151,8 @@ const UpsertSheetContent = ({
   };
 
   const onSubmitSale = async () => {
-    executeCreateSale({
+    executeUpsertSale({
+      id: saleId,
       products: selectedProducts.map((product) => ({
         id: product.id,
         quantity: product.quantity,
