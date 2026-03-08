@@ -30,52 +30,52 @@ export const upsertSale = actionClient
             },
           });
         }
-
-        const sale = await trx.sale.create({
-          data: {
-            date: new Date(),
+      }
+      const sale = await trx.sale.create({
+        data: {
+          date: new Date(),
+        },
+      });
+      for (const product of products) {
+        const productFromDb = await trx.product.findUnique({
+          where: {
+            id: product.id,
           },
         });
-        for (const product of products) {
-          const productFromDb = await trx.product.findUnique({
-            where: {
-              id: product.id,
-            },
-          });
 
-          if (!productFromDb) {
-            returnValidationErrors(upsertSaleSchema, {
-              _errors: ["Product notfound"],
-            });
-          }
-          const productIsOutOfStock = product.quantity > productFromDb.stock;
-          if (productIsOutOfStock) {
-            returnValidationErrors(upsertSaleSchema, {
-              _errors: ["Product out of stock"],
-            });
-          }
-          await trx.saleProduct.create({
-            data: {
-              saleId: sale.id,
-              productId: product.id,
-              quantity: product.quantity,
-              unitPrice: productFromDb.price,
-            },
-          });
-
-          await trx.product.update({
-            where: {
-              id: product.id,
-            },
-            data: {
-              stock: {
-                decrement: product.quantity,
-              },
-            },
+        if (!productFromDb) {
+          returnValidationErrors(upsertSaleSchema, {
+            _errors: ["Product notfound"],
           });
         }
+        const productIsOutOfStock = product.quantity > productFromDb.stock;
+        if (productIsOutOfStock) {
+          returnValidationErrors(upsertSaleSchema, {
+            _errors: ["Product out of stock"],
+          });
+        }
+        await trx.saleProduct.create({
+          data: {
+            saleId: sale.id,
+            productId: product.id,
+            quantity: product.quantity,
+            unitPrice: productFromDb.price,
+          },
+        });
+
+        await trx.product.update({
+          where: {
+            id: product.id,
+          },
+          data: {
+            stock: {
+              decrement: product.quantity,
+            },
+          },
+        });
       }
     });
     revalidatePath("/products");
     revalidatePath("/sales");
+    revalidatePath("/");
   });

@@ -151,6 +151,13 @@ const UpsertSheetContent = ({
   };
 
   const onSubmitSale = async () => {
+    console.log({
+      id: saleId,
+      products: selectedProducts.map((product) => ({
+        id: product.id,
+        quantity: product.quantity,
+      })),
+    });
     executeUpsertSale({
       id: saleId,
       products: selectedProducts.map((product) => ({

@@ -1,0 +1,74 @@
+import {
+  CircleDollarSignIcon,
+  DollarSign,
+  PackageIcon,
+  ShoppingBasketIcon,
+} from "lucide-react";
+import {
+  Header,
+  HeaderLeft,
+  HeaderSubTitle,
+  HeaderTitle,
+} from "../_components/header";
+import { getDashboard } from "../_data-acess/dashboard/get-dashboard";
+import { formatCurrency } from "../_helpers/currency";
+import {
+  SummaryCard,
+  SummaryCardIcon,
+  SummaryCardTitle,
+  SummaryCardValue,
+} from "./_components/summary-card";
+
+export default async function Home() {
+  const { totalRevenue, todayRevenue, totalProducts, totalSales, totalStock } =
+    await getDashboard();
+  return (
+    <div className="m-8 w-full space-y-8 rounded-lg bg-white p-8">
+      <Header>
+        <HeaderLeft>
+          <HeaderSubTitle>Visão geral dos dados</HeaderSubTitle>
+          <HeaderTitle>Dashboard</HeaderTitle>
+        </HeaderLeft>
+      </Header>
+      <div className="grid grid-cols-2 gap-6">
+        <SummaryCard>
+          <SummaryCardIcon>
+            <DollarSign />
+          </SummaryCardIcon>
+          <SummaryCardTitle>Receita Total</SummaryCardTitle>
+          <SummaryCardValue>{formatCurrency(totalRevenue)}</SummaryCardValue>
+        </SummaryCard>
+        <SummaryCard>
+          <SummaryCardIcon>
+            <DollarSign />
+          </SummaryCardIcon>
+          <SummaryCardTitle>Receita hoje</SummaryCardTitle>
+          <SummaryCardValue>{formatCurrency(todayRevenue)}</SummaryCardValue>
+        </SummaryCard>
+      </div>
+      <div className="grid grid-cols-3 gap-6">
+        <SummaryCard>
+          <SummaryCardIcon>
+            <CircleDollarSignIcon />
+          </SummaryCardIcon>
+          <SummaryCardTitle>Vendas Totais</SummaryCardTitle>
+          <SummaryCardValue>{totalSales}</SummaryCardValue>
+        </SummaryCard>
+        <SummaryCard>
+          <SummaryCardIcon>
+            <PackageIcon />
+          </SummaryCardIcon>
+          <SummaryCardTitle>Total em Estoque</SummaryCardTitle>
+          <SummaryCardValue>{totalStock}</SummaryCardValue>
+        </SummaryCard>
+        <SummaryCard>
+          <SummaryCardIcon>
+            <ShoppingBasketIcon />
+          </SummaryCardIcon>
+          <SummaryCardTitle>Produtos</SummaryCardTitle>
+          <SummaryCardValue>{totalProducts}</SummaryCardValue>
+        </SummaryCard>
+      </div>
+    </div>
+  );
+}
