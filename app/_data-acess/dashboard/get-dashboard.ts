@@ -1,6 +1,6 @@
 import { db } from "@/app/_lib/prisma";
 
-interface DashBoardDto {
+interface DashboardDto {
   totalRevenue: number;
   todayRevenue: number;
   totalSales: number;
@@ -8,11 +8,12 @@ interface DashBoardDto {
   totalProducts: number;
 }
 
-export const getDashboard = async (): Promise<DashBoardDto> => {
+export const getDashboard = async (): Promise<DashboardDto> => {
   const totalRevenueQuery = `
     SELECT SUM("unitPrice" * "quantity") as "totalRevenue"
     FROM "SaleProduct";
   `;
+
   const todayRevenueQuery = `
     SELECT SUM("unitPrice" * "quantity") as "todayRevenue"
     FROM "SaleProduct"
@@ -24,7 +25,6 @@ export const getDashboard = async (): Promise<DashBoardDto> => {
 
   const totalRevenuePromise =
     db.$queryRawUnsafe<{ totalRevenue: number }[]>(totalRevenueQuery);
-
   const todayRevenuePromise = db.$queryRawUnsafe<{ todayRevenue: number }[]>(
     todayRevenueQuery,
     startOfDay,
@@ -38,7 +38,6 @@ export const getDashboard = async (): Promise<DashBoardDto> => {
     },
   });
   const totalProductsPromise = db.product.count();
-
   const [totalRevenue, todayRevenue, totalSales, totalStock, totalProducts] =
     await Promise.all([
       totalRevenuePromise,
@@ -47,15 +46,6 @@ export const getDashboard = async (): Promise<DashBoardDto> => {
       totalStockPromise,
       totalProductsPromise,
     ]);
-
-  console.log({
-    totalRevenue: totalRevenue[0].totalRevenue,
-    todayRevenue: todayRevenue[0].todayRevenue,
-    totalSales,
-    totalStock: Number(totalStock._sum.stock),
-    totalProducts,
-  });
-
   return {
     totalRevenue: totalRevenue[0].totalRevenue,
     todayRevenue: todayRevenue[0].todayRevenue,
