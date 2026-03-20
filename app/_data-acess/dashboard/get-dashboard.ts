@@ -2,10 +2,19 @@ import "server-only";
 
 import { db } from "@/app/_lib/prisma";
 import dayjs from "dayjs";
+import { ProductStatusDto } from "../product/get-products";
 
 export interface DayTotalRevenue {
   day: string;
   totalRevenue: number;
+}
+
+export interface MostSoldProductDto {
+  productId: string;
+  name: string;
+  totalSold: number;
+  status: ProductStatusDto;
+  price: number;
 }
 interface DashboardDto {
   totalRevenue: number;
@@ -14,6 +23,7 @@ interface DashboardDto {
   totalStock: number;
   totalProducts: number;
   totalLast14DaysRevenue: DayTotalRevenue[];
+  mostSoldProducts: MostSoldProductDto[];
 }
 
 export const getDashboard = async (): Promise<DashboardDto> => {
@@ -29,10 +39,11 @@ export const getDashboard = async (): Promise<DashboardDto> => {
       { totalRevenue: number }[]
     >(
       `
-      SELECT SUM("unitPrice" * "quantity") as "totalRevenue"
+      SELECT SUM("SaleProduct"."unitPrice" * "SaleProduct"."quantity") as "totalRevenue"
       FROM "SaleProduct"
-      WHERE "createdAt" >= $1 AND "createdAt" <= $2;
-    `,
+      JOIN "Sale" ON "SaleProduct"."saleId" = "Sale"."id"
+      WHERE "Sale"."date" >= $1 AND "Sale"."date" <= $2;
+      `,
       day.startOf("day").toDate(),
       day.endOf("day").toDate(),
     );
@@ -42,13 +53,15 @@ export const getDashboard = async (): Promise<DashboardDto> => {
     });
   }
   const totalRevenueQuery = `
-    SELECT SUM("unitPrice" * "quantity") as "totalRevenue"
-    FROM "SaleProduct";
+    SELECT SUM("SaleProduct"."unitPrice" * "SaleProduct"."quantity") as "totalRevenue"
+    FROM "SaleProduct"
+    JOIN "Sale" ON "SaleProduct"."saleId" = "Sale"."id";
   `;
   const todayRevenueQuery = `
-    SELECT SUM("unitPrice" * "quantity") as "todayRevenue"
+    SELECT SUM("SaleProduct"."unitPrice" * "SaleProduct"."quantity") as "todayRevenue"
     FROM "SaleProduct"
-    WHERE "createdAt" >= $1 AND "createdAt" <= $2;
+    JOIN "Sale" ON "SaleProduct"."saleId" = "Sale"."id"
+    WHERE "Sale"."date" >= $1 AND "Sale"."date" <= $2;
   `;
   const startOfDay = new Date(new Date().setHours(0, 0, 0, 0));
   const endOfDay = new Date(new Date().setHours(23, 59, 59, 999));
@@ -67,14 +80,39 @@ export const getDashboard = async (): Promise<DashboardDto> => {
     },
   });
   const totalProductsPromise = db.product.count();
-  const [totalRevenue, todayRevenue, totalSales, totalStock, totalProducts] =
-    await Promise.all([
-      totalRevenuePromise,
-      todayRevenuePromise,
-      totalSalesPromise,
-      totalStockPromise,
-      totalProductsPromise,
-    ]);
+  const mostSoldProductsQuery = `
+  SELECT "Product"."name", SUM("SaleProduct"."quantity") as "totalSold", "Product"."price", "Product"."stock", "Product"."id" as "productId"
+  FROM "SaleProduct"
+  JOIN "Product" ON "SaleProduct"."productId" = "Product"."id"
+  GROUP BY "Product"."name", "Product"."price", "Product"."stock", "Product"."id"
+  ORDER BY "totalSold" DESC
+  LIMIT 5;
+`;
+  const mostSoldProductsPromise = db.$queryRawUnsafe<
+    {
+      productId: string;
+      name: string;
+      totalSold: number;
+      stock: number;
+      price: number;
+    }[]
+  >(mostSoldProductsQuery);
+  const [
+    totalRevenue,
+    todayRevenue,
+    totalSales,
+    totalStock,
+    totalProducts,
+    mostSoldProducts,
+  ] = await Promise.all([
+    totalRevenuePromise,
+    todayRevenuePromise,
+    totalSalesPromise,
+    totalStockPromise,
+    totalProductsPromise,
+    mostSoldProductsPromise,
+  ]);
+
   return {
     totalRevenue: totalRevenue[0].totalRevenue,
     todayRevenue: todayRevenue[0].todayRevenue,
@@ -82,5 +120,11 @@ export const getDashboard = async (): Promise<DashboardDto> => {
     totalStock: Number(totalStock._sum.stock),
     totalProducts,
     totalLast14DaysRevenue,
+    mostSoldProducts: mostSoldProducts.map((product) => ({
+      ...product,
+      totalSold: Number(product.totalSold),
+      price: Number(product.price),
+      status: product.stock > 0 ? "IN_STOCK" : "OUT_OF_STOCK",
+    })),
   };
 };
