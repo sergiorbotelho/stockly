@@ -32,3 +32,19 @@ export const SummaryCardSkeleton = () => {
     </div>
   );
 };
+
+export const SummaryChartSkeleton = () => {
+  return (
+    <div className="rounded-xl bg-white p-6">
+      <div className="space-y-2">
+        <div className="h-6 w-[86.26px] rounded-md bg-gray-200" />
+        <div className="mb-5 h-3 w-28 rounded-md bg-gray-200" />
+        <div className="mt-4 flex gap-1 px-2">
+          {Array.from({ length: 14 }).map((_, ind) => (
+            <div key={ind} className="h-64 w-20 rounded-md bg-gray-200" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -6,9 +6,12 @@ import {
   HeaderTitle,
 } from "../_components/header";
 import { getDashboard } from "../_data-acess/dashboard/get-dashboard";
+import Last14DaysRevenueCard from "./_components/last-14-days-revenue-card";
 import MostSoldProductItem from "./_components/most-solid-product-item";
-import RevenueChart from "./_components/revenue-chart";
-import { SummaryCardSkeleton } from "./_components/summary-card";
+import {
+  SummaryCardSkeleton,
+  SummaryChartSkeleton,
+} from "./_components/summary-card";
 import TodayRevenue from "./_components/today-revenue-card";
 import TotalProductCard from "./_components/total-product-card";
 import TotalRevenueCard from "./_components/total-revenue-card";
@@ -16,7 +19,7 @@ import TotalSaleCard from "./_components/total-sale-card";
 import TotalStockCard from "./_components/total-stock-card";
 
 const Home = async () => {
-  const { totalLast14DaysRevenue, mostSoldProducts } = await getDashboard();
+  const { mostSoldProducts } = await getDashboard();
   return (
     <div className="m-8 flex w-full flex-col space-y-8 rounded-lg">
       <Header>
@@ -48,11 +51,9 @@ const Home = async () => {
       </div>
 
       <div className="grid min-h-0 grid-cols-[minmax(0,2.5fr),minmax(0,1fr)] gap-6">
-        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6">
-          <p className="text-lg font-semibold text-slate-900">Receita</p>
-          <p className="text-sm text-slate-400">Últimos 14 dias</p>
-          <RevenueChart data={totalLast14DaysRevenue} />
-        </div>
+        <Suspense fallback={<SummaryChartSkeleton />}>
+          <Last14DaysRevenueCard />
+        </Suspense>
 
         <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white">
           <p className="p-6 text-lg font-semibold text-slate-900">
