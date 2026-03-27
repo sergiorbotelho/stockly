@@ -34,7 +34,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { flattenValidationErrors } from "next-safe-action";
 import { useAction } from "next-safe-action/hooks";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z, { uuidv4 } from "zod";
@@ -47,6 +47,7 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 interface UpsertSheetContentProps {
+  isOpen: boolean;
   saleId?: string;
   products: ProductDto[];
   productsOptions: ComboboxOption[];
@@ -61,6 +62,7 @@ interface SelectedProduct {
   quantity: number;
 }
 const UpsertSheetContent = ({
+  isOpen,
   saleId,
   productsOptions,
   products,
@@ -89,6 +91,16 @@ const UpsertSheetContent = ({
       quantity: 1,
     },
   });
+
+  useEffect(() => {
+    if (!isOpen) {
+      form.reset();
+      setSelectedProducts([]);
+    }
+  }, [form, isOpen]);
+  useEffect(() => {
+    setSelectedProducts(defaultSelectedProducts ?? []);
+  }, [defaultSelectedProducts]);
 
   const onSubmit = (data: FormSchema) => {
     const selectedProduct = products.find(
