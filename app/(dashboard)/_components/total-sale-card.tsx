@@ -8,7 +8,6 @@ import {
 } from "./summary-card";
 
 const TotalSaleCard = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   const totalSales = await getTotalSale();
   return (
     <SummaryCard>

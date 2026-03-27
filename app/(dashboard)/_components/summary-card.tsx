@@ -40,8 +40,29 @@ export const SummaryChartSkeleton = () => {
         <div className="h-6 w-[86.26px] rounded-md bg-gray-200" />
         <div className="mb-5 h-3 w-28 rounded-md bg-gray-200" />
         <div className="mt-4 flex gap-1 px-2">
-          {Array.from({ length: 14 }).map((_, ind) => (
+          {Array.from({ length: 20 }).map((_, ind) => (
             <div key={ind} className="h-64 w-20 rounded-md bg-gray-200" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+export const SummaryCardMostSoldSkeleton = () => {
+  return (
+    <div className="rounded-xl bg-white p-8">
+      <div className="space-y-6">
+        <div className="mb-5 h-3 w-28 rounded-md bg-gray-200" />
+        <div className="mt-4 flex flex-col gap-4 px-2">
+          {Array.from({ length: 3 }).map((_, ind) => (
+            <div key={ind} className="flex flex-col gap-2">
+              <div className="h-4 w-16 rounded-full bg-gray-200" />
+              <div className="flex justify-between">
+                <div className="h-5 w-20 rounded-md bg-gray-200" />
+                <div className="h-5 w-20 rounded-md bg-gray-200" />
+              </div>
+              <div className="h-5 w-20 rounded-md bg-gray-200" />
+            </div>
           ))}
         </div>
       </div>
