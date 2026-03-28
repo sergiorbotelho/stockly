@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/app/_components/ui/dropdown-menu";
-import { Product } from "@/app/generated/prisma";
+import { ProductDto } from "@/app/_data-acess/product/get-products";
 import {
   ClipboardCopyIcon,
   EditIcon,
@@ -22,7 +22,7 @@ import DeleteProductDialogContent from "./delete-dialog-content";
 import UpsertProductDialogContent from "./upsert-dialog-content";
 
 interface ProductTableDropdownMenuProps {
-  row: Product;
+  row: ProductDto;
 }
 
 const ProductTableDropdownMenu = ({ row }: ProductTableDropdownMenuProps) => {

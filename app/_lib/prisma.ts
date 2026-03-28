@@ -1,23 +1,15 @@
-/* eslint-disable no-unused-vars */
-import { PrismaClient } from "../generated/prisma";
-
-declare global {
-  // eslint-disable-next-line no-var
-  var cachedPrisma: ReturnType<typeof createPrismaClient>;
-}
-
-const createPrismaClient = () => {
-  return new PrismaClient();
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../generated/prisma/client";
+const globalForPrisma = globalThis as unknown as {
+  prisma?: PrismaClient;
 };
-
-let prisma: ReturnType<typeof createPrismaClient>;
-if (process.env.NODE_ENV === "production") {
-  prisma = createPrismaClient();
-} else {
-  if (!global.cachedPrisma) {
-    global.cachedPrisma = createPrismaClient();
-  }
-  prisma = global.cachedPrisma;
+export const db =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    adapter: new PrismaPg({
+      connectionString: process.env.DATABASE_URL,
+    }),
+  });
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = db;
 }
-
-export const db = prisma;
