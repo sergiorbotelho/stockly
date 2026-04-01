@@ -16,7 +16,7 @@ O projeto simula um ambiente real de gestão, com dashboard, controle de produto
 
 Acesse o projeto em produção:
 
-👉 https://stockly-hrr1enwgq-sergiorbotelhos-projects.vercel.app/
+👉 https://stockly-xmn2.vercel.app/
 
 ---
 
