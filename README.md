@@ -1,36 +1,225 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📦 Stockly
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-16-black)
+![Node](https://img.shields.io/badge/Node-22-green)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-NeonDB-blue)
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 
-First, run the development server:
+Sistema de controle de estoque desenvolvido para fins de estudo, utilizando tecnologias modernas do ecossistema JavaScript/TypeScript.
+
+O projeto simula um ambiente real de gestão, com dashboard, controle de produtos e estrutura preparada para evolução como um sistema SaaS.
+
+---
+
+## 🌐 Demo
+
+Acesse o projeto em produção:
+
+👉 https://stockly-hrr1enwgq-sergiorbotelhos-projects.vercel.app/
+
+---
+
+## 📸 Preview
+
+### Dashboard
+
+![Dashboard](./public/assets/images/dashboard.png)
+
+### Produtos
+
+![Produtos](./public/assets/images/produtos.png)
+
+---
+
+## 🚀 Tecnologias utilizadas
+
+### Frontend
+
+- Next.js 16 (App Router)
+- React
+- TypeScript
+- shadcn/ui
+- Material UI
+
+### Backend / Infra
+
+- Node.js v22.14.0
+- Prisma ORM
+- PostgreSQL (NeonDB)
+
+---
+
+## 📚 Objetivo do projeto
+
+Este projeto foi desenvolvido com foco em aprendizado prático, abordando:
+
+- Estruturação de aplicações com Next.js (App Router)
+- Integração com banco de dados usando Prisma
+- Modelagem de dados relacional (PostgreSQL)
+- Construção de dashboards e visualização de dados
+- Criação de interfaces modernas e responsivas
+- Organização de código escalável
+- Integração fullstack (frontend + backend)
+
+---
+
+## ⚙️ Funcionalidades
+
+- 📦 CRUD completo de produtos
+- 🗂️ Organização por categorias
+- 📊 Dashboard com métricas (estoque, movimentações, etc.)
+- 🔄 Controle de entrada e saída de estoque
+- 🧾 Estrutura preparada para relatórios
+
+---
+
+## 🧠 Decisões técnicas
+
+- **Prisma ORM**
+  Utilizado para garantir tipagem forte, produtividade e facilidade na manutenção das queries.
+
+- **NeonDB (PostgreSQL Serverless)**
+  Escolhido pela facilidade de integração com ambientes serverless e deploy na Vercel.
+
+- **Next.js App Router**
+  Utilizado para melhor organização do projeto, aproveitando Server e Client Components.
+
+- **shadcn/ui**
+  Desenvolvimento com componentes reutilizáveis e design moderno.
+
+---
+
+## 🗄️ Banco de Dados
+
+O projeto utiliza:
+
+- PostgreSQL hospedado no **NeonDB**
+- Prisma para:
+  - Migrations
+  - Tipagem automática
+  - Abstração de queries
+
+---
+
+## 🧱 Arquitetura
+
+O projeto segue uma arquitetura moderna baseada em:
+
+- App Router (Next.js)
+- Separação de responsabilidades (UI / lógica / dados)
+- Componentização
+- Server e Client Components
+
+---
+
+## 📁 Estrutura do projeto
+
+```
+src/
+ ├── app/            # Rotas e páginas (App Router)
+ ├── components/     # Componentes reutilizáveis
+ ├── services/       # Integração com APIs / lógica
+ ├── prisma/         # Schema e migrations
+ ├── utils/          # Funções auxiliares
+```
+
+---
+
+## ⚙️ Como rodar o projeto
+
+### Pré-requisitos
+
+- Node.js v22.14.0+
+- Conta no NeonDB ou PostgreSQL local
+- npm, yarn ou pnpm
+
+---
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/sergiorbotelho/stockly.git
+cd stockly
+```
+
+---
+
+### 2. Instale as dependências
+
+```bash
+npm install
+```
+
+---
+
+### 3. Configure as variáveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+DATABASE_URL="sua_url_do_neondb"
+```
+
+---
+
+### 4. Execute as migrations
+
+```bash
+npx prisma migrate dev
+```
+
+---
+
+### 5. Rode o projeto
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+A aplicação estará disponível em:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🔐 Variáveis de ambiente
 
-To learn more about Next.js, take a look at the following resources:
+| Variável     | Descrição                  |
+| ------------ | -------------------------- |
+| DATABASE_URL | URL de conexão com o banco |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧠 Aprendizados
 
-## Deploy on Vercel
+Durante o desenvolvimento deste projeto, foram explorados conceitos como:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- ORM com Prisma
+- Integração com banco em nuvem
+- Arquitetura moderna com Next.js
+- Criação de dashboards
+- Componentização e reutilização de código
+- Boas práticas de desenvolvimento fullstack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📌 Observação
+
+Este projeto foi desenvolvido exclusivamente para fins de estudo e aprimoramento técnico.
+
+---
+
+## 👨‍💻 Autor
+
+Desenvolvido por **Sergio Botelho**
+
+- GitHub: https://github.com/sergiorbotelho
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT.
