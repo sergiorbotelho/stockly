@@ -13,7 +13,7 @@ export const deleteSale = actionClient
           id,
         },
         include: {
-          products: true,
+          saleProducts: true,
         },
       });
       if (!sale) return;
@@ -23,7 +23,7 @@ export const deleteSale = actionClient
         },
       });
 
-      for (const product of sale?.products) {
+      for (const product of sale?.saleProducts) {
         await trx.product.update({
           where: {
             id: product.productId,

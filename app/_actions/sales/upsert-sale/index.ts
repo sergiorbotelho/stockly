@@ -14,13 +14,13 @@ export const upsertSale = actionClient
       if (isUpdate) {
         const existingSale = await trx.sale.findUnique({
           where: { id },
-          include: { products: true },
+          include: { saleProducts: true },
         });
         if (!existingSale) return;
         await trx.sale.delete({
           where: { id },
         });
-        for (const product of existingSale.products) {
+        for (const product of existingSale.saleProducts) {
           await trx.product.update({
             where: { id: product.productId },
             data: {
